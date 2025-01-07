@@ -26,15 +26,16 @@ for folder, subfolders, files in os.walk(pdf_folder):
 
         # Creates reader object
         with open(pdf, 'rb') as fhandle:
-            writer = PdfWriter(fhandle)
+            reader = PdfReader(fhandle)
 
         # Ignores already encrypted files
-        if writer.is_encrypted:
+        if reader.is_encrypted:
             print(f'{pdf}\nis already encrypted.\n')
             continue
 
         # Encrypts and saves pdf file.
         else:
+            writer = PdfWriter(pdf)
             writer.encrypt('hideokojima')
-            with open(Path(folder) / f'{pdf.name}-encrypted.pdf') as fhandle:
+            with open(Path(folder) / f'{pdf.name}-encrypted.pdf', 'wb') as fhandle:
                 writer.write(fhandle)
