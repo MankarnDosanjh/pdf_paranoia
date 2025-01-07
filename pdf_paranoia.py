@@ -9,3 +9,32 @@ was encrypted correctly.
 Then, write a program that finds all encrypted PDFs in a folder (and its subfolders) and creates a
 decrypted copy of the PDF using a provided password. If the password is incorrect, the program
 should print a message to the user and continue to the next PDF.'''
+
+# Module imports
+import sys, os
+from pypdf import PdfReader, PdfWriter
+from pathlib import Path
+
+# Test file path
+pdf_folder = r'''C:\Users\Manka\Documents\Programming\Automate the Boring Stuff with Python\Chapter 15 - Working with PDF and Word documents\pdf_paranoia\PDF files'''
+
+# Crawls through folder and subfolders
+for folder, subfolders, files in os.walk(pdf_folder):
+    
+    # Isolates pdfs in crawled folder
+    for pdf in Path(folder).glob('*.pdf'):
+
+        # Creates reader object
+        with open(pdf, 'rb') as fhandle:
+            writer = PdfWriter(fhandle)
+
+        # Ignores already encrypted files
+        if writer.is_encrypted:
+            print(f'{pdf}\nis already encrypted.\n')
+            continue
+
+        # Encrypts and saves pdf file.
+        else:
+            writer.encrypt('hideokojima')
+            with open(Path(folder) / f'{pdf.name}-encrypted.pdf') as fhandle:
+                writer.write(fhandle)
