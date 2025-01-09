@@ -14,14 +14,13 @@ for folder, subfolders, files in os.walk(pdf_folder):
     
     # Crawls through pdf files
     for pdf in Path(folder).glob('*.pdf'):
-        
-        # Creates writer and encrypts pdf.
-        with open(Path(pdf), 'rb') as fhandle: 
-            reader = PdfReader(fhandle)
-            writer = PdfWriter(clone_from=reader)
-            writer.encrypt('a')
 
-        # Replaces original file with encrypted copy.
-        with open(Path(f'./{pdf.stem}_encrypted.pdf'), 'wb') as fhandle:
+        with open(Path(pdf), 'rb') as fhandle:
+            reader = PdfReader(fhandle)
+            if reader.is_encrypted:
+                reader.decrypt('a')
+            writer = PdfWriter(clone_from=reader)
+        
+        with open(Path(f'./{pdf.stem}_decrypted.pdf'), 'wb') as fhandle:
             writer.write(fhandle)
             os.remove(Path(pdf))
