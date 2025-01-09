@@ -16,7 +16,7 @@ from pypdf import PdfReader, PdfWriter
 from pathlib import Path
 
 # Test file path
-pdf_folder = r'''C:\Users\Manka\Documents\Programming\Automate the Boring Stuff with Python\Chapter 15 - Working with PDF and Word documents\pdf_paranoia'''
+pdf_folder = r'''C:\Users\Manka\Documents\Programming\Automate the Boring Stuff with Python\Chapter 15 - Working with PDF and Word documents\pdf_paranoia\PDF files'''
 
 # Crawls through folder and subfolders
 for folder, subfolders, files in os.walk(pdf_folder):
@@ -41,6 +41,6 @@ for folder, subfolders, files in os.walk(pdf_folder):
             file_name.replace('_decrypted', '_encrypted')
             with open(Path(folder) / f'{file_name}.pdf', 'wb') as fhandle:
                 writer.write(fhandle)
-                os.remove(pdf)
+            os.remove(pdf)
 
 fhandle.close()
