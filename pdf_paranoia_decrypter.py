@@ -23,28 +23,29 @@ for folder, subfolders, files in os.walk(pdf_folder):
     
     # Isolates pdfs in crawled folder
     for pdf in Path(folder).glob('*.pdf'):
-
         # Creates reader object
-        with open(pdf, 'rb') as fhandle:
-            reader = PdfReader(fhandle)
+        fhandle = open(pdf, 'rb')
+        reader = PdfReader(fhandle)
 
         # Ignores already encrypted files
         if reader.is_encrypted:
             try:
                 reader.decrypt('hideokojima')
-                writer = PdfWriter(clone_from=reader)
-                file_name = pdf.stem
-                file_name.replace('_encrypted', '_decrypted')
-                with open(Path(folder) / f'{file_name}.pdf', 'wb') as fhandle:
-                    writer.write(fhandle)
-                    os.remove(pdf)
-                    print(f'{pdf} SUCCESSFULLY DECRYPTED.\n')
-            
+
             except:
                 print(f'ERROR - {pdf} DECRYPTION FAILED.\nTry different password.\n')
 
+            writer = PdfWriter(clone_from=reader)
+            file_name = pdf.stem
+            file_name.replace('_encrypted', '_decrypted')
+            with open(Path(folder) / f'{file_name}.pdf', 'wb') as fhandle:
+                writer.write(fhandle)
+                os.remove(pdf)
+                print(f'{pdf} SUCCESSFULLY DECRYPTED.\n')
 
         # Encrypts and saves pdf file.
         else:
             print(f'{pdf}\nis already decrypted.\n')
             continue
+
+fhandle.close()

@@ -25,8 +25,8 @@ for folder, subfolders, files in os.walk(pdf_folder):
     for pdf in Path(folder).glob('*.pdf'):
 
         # Creates reader object
-        with open(pdf, 'rb') as fhandle:
-            reader = PdfReader(fhandle)
+        fhandle = open(pdf, 'rb')
+        reader = PdfReader(fhandle)
 
         # Ignores already encrypted files
         if reader.is_encrypted:
@@ -42,3 +42,5 @@ for folder, subfolders, files in os.walk(pdf_folder):
             with open(Path(folder) / f'{file_name}.pdf', 'wb') as fhandle:
                 writer.write(fhandle)
                 os.remove(pdf)
+
+fhandle.close()
