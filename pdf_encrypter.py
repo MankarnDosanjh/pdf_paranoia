@@ -4,7 +4,6 @@ import os, sys
 from pathlib import Path
 from pypdf import PdfReader, PdfWriter
 
-
 # Test file path
 pdf_folder = Path(r'C:\Users\Manka\Documents\Programming\Automate the Boring Stuff with Python\Chapter 15 - Working with PDF and Word documents\pdf_paranoia\PDF files')
 os.chdir(pdf_folder)
