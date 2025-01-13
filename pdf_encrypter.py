@@ -15,7 +15,7 @@ while True:
         os.chdir(pdf_folder)
         break
     else:
-        print('\nERROR - INVALID DIRECTORY PATH!\n')
+        print('\nERROR - INVALID DIRECTORY PATH.\n')
 
 # User prompt for decryption password.
 while True:

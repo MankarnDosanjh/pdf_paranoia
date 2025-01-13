@@ -8,6 +8,7 @@ os.chdir(Path(sys.argv[0]).parent) # Changes directory to script location.
 # TODO: Implement command line functionality (make it optional this time).
 # TODO: Deal with errors on unsuccesful decryption.
 # TODO: Deal with unsucessful decryption.
+# TODO: Deal with errors on files already decrypted by pdf_decrypter.py
 
 # Prompts user for directory to be crawled.
 while True:
@@ -48,11 +49,10 @@ for folder, subfolders, files in os.walk(pdf_folder):
         if filename.endswith('_encrypted'):
             filename = filename.replace('_encrypted', '_decrypted')
         elif filename.endswith('_decrypted'):
-            print
-            
+            pass
         else:
             filename += '_decrypted'
-        
+
         # Replaces original file with decrypted copy
         with open(Path(f'./{filename}.pdf'), 'wb') as fhandle:
             print(f'\nDecrypting {pdf}...')
