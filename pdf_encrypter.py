@@ -42,13 +42,15 @@ for folder, subfolders, files in os.walk(pdf_folder):
 
         # Remove _decrypted tag line from filename.
         filename = pdf.stem
-        if pdf.stem.endswith('_decrypted'):
-            filename = pdf.stem.replace('_decrypted', '_encrypted')
+        if filename.endswith('_decrypted'):
+            filename = filename.replace('_decrypted', '_encrypted')
+        else:
+            filename += '_encrypted'
 
         # Replaces original file with encrypted copy.
         with open(Path(f'./{filename}.pdf'), 'wb') as fhandle:
             print(f'\nEncrypting {pdf}...')
             writer.write(fhandle)
             os.remove(Path(pdf))
-
+        
 print('PDF encryption successful!')
