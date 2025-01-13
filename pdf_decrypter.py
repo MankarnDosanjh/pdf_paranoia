@@ -7,6 +7,7 @@ os.chdir(Path(sys.argv[0]).parent) # Changes directory to script location.
 
 # TODO: Implement command line functionality (make it optional this time).
 # TODO: Deal with errors on unsuccesful decryption.
+# TODO: Deal with unsucessful decryption.
 
 # Prompts user for directory to be crawled.
 while True:
@@ -15,7 +16,7 @@ while True:
         os.chdir(pdf_folder)
         break
     else:
-        print('\nERROR - Invalid directory path.\n')
+        print('\nERROR - INVALID DIRECTORY PATH!\n')
 
 # User prompt for decryption password.
 while True:
@@ -26,7 +27,7 @@ while True:
         break
     
     else:
-        print("\nERROR - Password's don't match. Try again.")
+        print("\nERROR - PASSWORDS DO NOT MATCH!")
 
 # Crawls through directory
 for folder, subfolders, files in os.walk(pdf_folder):
@@ -40,10 +41,15 @@ for folder, subfolders, files in os.walk(pdf_folder):
             if reader.is_encrypted: reader.decrypt(password)
             writer = PdfWriter(clone_from=reader)
         
-        # Remove _encrypted tag line from filename.
+        # Adds _decrypted tag to filename.
         filename = pdf.stem
+
+        # Replaces tag created by pdf_encrypter.py.
         if filename.endswith('_encrypted'):
             filename = filename.replace('_encrypted', '_decrypted')
+        elif filename.endswith('_decrypted'):
+            print
+            
         else:
             filename += '_decrypted'
         
@@ -53,4 +59,4 @@ for folder, subfolders, files in os.walk(pdf_folder):
             writer.write(fhandle)
             os.remove(Path(pdf))
 
-print(f'\nPDF decryption successful!')
+print(f'\nPDF decryption finished!')
