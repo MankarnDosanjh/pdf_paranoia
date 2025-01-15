@@ -6,11 +6,10 @@ from pypdf import PdfReader, PdfWriter, errors
 os.chdir(Path(sys.argv[0]).parent) # Changes directory to script location.
 
 # TODO: Implement command line functionality (make it optional this time).
-# TODO: Deal with errors when files are already encrypted.
 
 # Prompts user for directory to be crawled.
 while True:
-    pdf_folder = Path(input("Folder path where PDF's are to be encrypted:\n"))
+    pdf_folder = Path(input("Folder path where PDF's are to be encrypted:\n")).resolve()
     if pdf_folder.is_dir():
         os.chdir(pdf_folder)
         break
@@ -35,7 +34,7 @@ for folder, subfolders, files in os.walk(pdf_folder):
     for pdf in Path(folder).glob('*.pdf'):
         
         # Creates writer and encrypts pdf.
-        with open(Path(pdf), 'rb') as fhandle: 
+        with open(Path(pdf), 'rb') as fhandle:
             
             # Checks if file is already encrypted.
             try:
