@@ -2,17 +2,14 @@
 
 import os, sys
 from pathlib import Path
-from pypdf import PdfReader, PdfWriter
+from pypdf import PdfReader, PdfWriter, errors
 os.chdir(Path(sys.argv[0]).parent) # Changes directory to script location.
 
 # TODO: Implement command line functionality (make it optional this time).
-# TODO: Deal with errors on unsuccesful decryption.
-# TODO: Deal with unsucessful decryption.
-# TODO: Deal with errors on files already decrypted by pdf_decrypter.py
 
 # Prompts user for directory to be crawled.
 while True:
-    pdf_folder = Path(input("Folder path where PDF's are to be decrypted:\n"))
+    pdf_folder = Path(input("Folder path where PDF's are to be decrypted:\n")).resolve()
     if pdf_folder.is_dir():
         os.chdir(pdf_folder)
         break
@@ -39,8 +36,20 @@ for folder, subfolders, files in os.walk(pdf_folder):
         # Decryptes pdf and creates writer.
         with open(Path(pdf), 'rb') as fhandle:
             reader = PdfReader(fhandle)
-            if reader.is_encrypted: reader.decrypt(password)
-            writer = PdfWriter(clone_from=reader)
+
+            # Checks file is encrypted and decrypts.
+            if reader.is_encrypted:
+                
+                # Checks decryption password is correct.
+                try:
+                    reader.decrypt(password)
+                    writer = PdfWriter(clone_from=reader)
+                except errors.FileNotDecryptedError:
+                    print(f'\nERROR - {pdf} DECRYPTION FAILED! WRONG PASSWORD!')
+                    continue
+            else:
+                print(f'\nERROR - {pdf} ALREADY DECRYPTED!')
+                continue            
         
         # Adds _decrypted tag to filename.
         filename = pdf.stem
@@ -48,8 +57,6 @@ for folder, subfolders, files in os.walk(pdf_folder):
         # Replaces tag created by pdf_encrypter.py.
         if filename.endswith('_encrypted'):
             filename = filename.replace('_encrypted', '_decrypted')
-        elif filename.endswith('_decrypted'):
-            pass
         else:
             filename += '_decrypted'
 
