@@ -23,9 +23,10 @@ if len(sys.argv) > 1:
         print("ARG 2: Password to encrypt PDF's with (INCLUDES SPACES)")
         quit()
 
-# User prompt for folder path.
+# User prompt for folder path and password.
 else:
     pdf_folder = Path(input("File path to crawl for PDF's to encrypt:\n")).resolve()
+    password = input('\nEnter an encryption password: ')
     
 # Validates that path is a directory.
 if pdf_folder.is_dir():
@@ -33,9 +34,6 @@ if pdf_folder.is_dir():
 else:
     print('\nERROR - INVALID DIRECTORY PATH.\n')
     quit()
-
-# User prompt for encryption password.
-password = input('\nEnter an encryption password: ')
 
 # Crawls through directory
 for folder, subfolders, files in os.walk(pdf_folder):
