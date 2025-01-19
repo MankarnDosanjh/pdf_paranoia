@@ -1,0 +1,11 @@
+1. Store python script in Desktop.
+
+2. Create a batch file by changing the file extension of a new text file.
+
+3. Edit batch file with notepad and copy the following into it:
+@py.exe [SCRIPT FILEPATH GOES HERE] %*
+@pause
+
+4. Store batch file in C:/Windows directory.
+
+5. Use Windows Run (Windows key + R) and type the batch filename followed by any command line arguments for its script.
