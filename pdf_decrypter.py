@@ -1,66 +1,64 @@
 '''pdf_decrypter.py'''
 
+# Module imports.
 import os, sys
 from pathlib import Path
 from pypdf import PdfReader, PdfWriter, errors
-os.chdir(Path(sys.argv[0]).parent) # Changes directory to script location.
 
-# TODO: Implement command line functionality (make it optional this time).
-# Command line structure:
-# pdf_decrypter.py ./PDF files password
+# Changes directory to script location.
+os.chdir(Path(sys.argv[0]).parent)
 
-# Prompts user for directory to be crawled.
-while True:
-    pdf_folder = Path(input("Folder path where PDF's are to be decrypted:\n")).resolve()
-    if pdf_folder.is_dir():
-        os.chdir(pdf_folder)
-        break
+# Optional command line functionality.
+if len(sys.argv) > 1:
+
+    # Stores folder and password from command line arguments
+    if len(sys.argv) >= 3:
+        pdf_folder = Path(sys.argv[1]).resolve()
+        password = " ".join(sys.argv[2:])
+    
+    # Explains command line usage to user.
     else:
-        print('\nERROR - INVALID DIRECTORY PATH!\n')
+        print("\nERROR - INSUFFICIENT COMMAND LINE ARGUMENTS")
+        print("\nARG 1: File path to crawl for PDF's to decrypt")
+        print("ARG 2: Password to decrypt PDF's with (INCLUDES SPACES)")
+        quit()
 
-# User prompt for decryption password.
-while True:
+# User prompt for folder path and password.
+else:
+    pdf_folder = Path(input("File path to crawl for PDF's to decrypt:\n")).resolve()
     password = input('\nEnter a decryption password: ')
-    confirm_pass = input('\nPlease confirm the password: ')
-    
-    if confirm_pass == password:
-        break
-    
-    else:
-        print("\nERROR - PASSWORDS DO NOT MATCH!")
 
-# Crawls through directory
+# Validates that path is a directory.
+if pdf_folder.is_dir():
+    os.chdir(pdf_folder)
+else:
+    print('\nERROR - INVALID DIRECTORY PATH.\n')
+    quit()
+
+# Crawls through pdf files in directory.
 for folder, subfolders, files in os.walk(pdf_folder):
-    
-    # Crawls through pdf files
     for pdf in Path(folder).glob('*.pdf'):
+        with open(Path(pdf), 'rb') as fhandle:   
 
-        # Decryptes pdf and creates writer.
-        with open(Path(pdf), 'rb') as fhandle:
+            # Attempts decryption of encrypted pdf file.
             reader = PdfReader(fhandle)
-
-            # Checks file is encrypted and decrypts.
             if reader.is_encrypted:
-                
-                # Checks decryption password is correct.
                 try:
                     reader.decrypt(password)
                     writer = PdfWriter(clone_from=reader)
                 except errors.FileNotDecryptedError:
                     print(f'\nERROR - {pdf} DECRYPTION FAILED! WRONG PASSWORD!')
                     continue
+
+            # Skips file if already decrypted.
             else:
                 print(f'\nERROR - {pdf} ALREADY DECRYPTED!')
                 continue            
         
         # Adds _decrypted tag to filename.
         filename = pdf.stem
-
-        # Replaces tag created by pdf_encrypter.py.
-        if filename.endswith('_encrypted'):
-            filename = filename.replace('_encrypted', '_decrypted')
-        else:
-            filename += '_decrypted'
+        if filename.endswith('_encrypted'): filename = filename.replace('_encrypted', '_decrypted')
+        else: filename += '_decrypted'
 
         # Replaces original file with decrypted copy
         with open(Path(f'./{filename}.pdf'), 'wb') as fhandle:

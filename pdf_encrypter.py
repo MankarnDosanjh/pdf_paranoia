@@ -1,6 +1,6 @@
 '''pdf_encrypter.py'''
 
-# Module imports
+# Module imports.
 import os, sys
 from pathlib import Path
 from pypdf import PdfReader, PdfWriter, errors
@@ -8,7 +8,7 @@ from pypdf import PdfReader, PdfWriter, errors
 # Changes directory to script location.
 os.chdir(Path(sys.argv[0]).parent)
 
-# Implement optional command line functionality.
+# Optional command line functionality.
 if len(sys.argv) > 1:
 
     # Stores folder and password from command line arguments
@@ -35,16 +35,12 @@ else:
     print('\nERROR - INVALID DIRECTORY PATH.\n')
     quit()
 
-# Crawls through directory
+# Crawls through pdf files in directory.
 for folder, subfolders, files in os.walk(pdf_folder):
-
-    # Crawls through pdf files
     for pdf in Path(folder).glob('*.pdf'):
-        
-        # Creates writer and encrypts pdf.
         with open(Path(pdf), 'rb') as fhandle:
             
-            # Checks if file is already encrypted.
+            # Checks if file is already encrypted.  
             try:
                 reader = PdfReader(fhandle)
                 writer = PdfWriter(clone_from=reader)
