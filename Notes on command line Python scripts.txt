@@ -8,4 +8,7 @@
 
 4. Store batch file in C:/Windows directory.
 
-5. Use Windows Run (Windows key + R) and type the batch filename followed by any command line arguments for its script.
+5. Use Windows Run (Windows key + R) and type the batch filename followed by command line arguments for its script.
+
+NOTES:
+Make sure PDF files are also in Desktop to avoid PATH length errors.
