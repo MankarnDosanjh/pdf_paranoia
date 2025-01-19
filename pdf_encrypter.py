@@ -18,8 +18,8 @@ if len(sys.argv) > 1:
     
     # Explains command line usage to user.
     else:
-        print("\npdf_encrypter.py command line arguments:")
-        print("ARG 1: File path to crawl for PDF's to encrypt")
+        print("\nERROR - INSUFFICIENT COMMAND LINE ARGUMENTS")
+        print("\nARG 1: File path to crawl for PDF's to encrypt")
         print("ARG 2: Password to encrypt PDF's with (INCLUDES SPACES)")
         quit()
 
