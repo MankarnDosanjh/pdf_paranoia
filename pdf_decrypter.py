@@ -16,7 +16,7 @@ if len(sys.argv) > 1:
         pdf_folder = Path(sys.argv[1]).resolve()
         password = " ".join(sys.argv[2:])
     
-    # Explains command line usage to user.
+    # Explains command line usage to user if insufficient arguments provided.
     else:
         print("\nERROR - INSUFFICIENT COMMAND LINE ARGUMENTS")
         print("\nARG 1: File path to crawl for PDF's to decrypt")
