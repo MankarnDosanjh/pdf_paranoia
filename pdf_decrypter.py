@@ -6,6 +6,8 @@ from pypdf import PdfReader, PdfWriter, errors
 os.chdir(Path(sys.argv[0]).parent) # Changes directory to script location.
 
 # TODO: Implement command line functionality (make it optional this time).
+# Command line structure:
+# pdf_decrypter.py ./PDF files password
 
 # Prompts user for directory to be crawled.
 while True:

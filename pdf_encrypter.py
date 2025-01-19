@@ -1,35 +1,45 @@
 '''pdf_encrypter.py'''
 
+# Module imports
 import os, sys
 from pathlib import Path
 from pypdf import PdfReader, PdfWriter, errors
-os.chdir(Path(sys.argv[0]).parent) # Changes directory to script location.
 
-# TODO: Implement command line functionality (make it optional this time).
+# Changes directory to script location.
+os.chdir(Path(sys.argv[0]).parent)
 
-# Prompts user for directory to be crawled.
-while True:
-    pdf_folder = Path(input("Folder path where PDF's are to be encrypted:\n")).resolve()
-    if pdf_folder.is_dir():
-        os.chdir(pdf_folder)
-        break
-    else:
-        print('\nERROR - INVALID DIRECTORY PATH.\n')
+# Implement optional command line functionality.
+if len(sys.argv) > 1:
 
-# User prompt for decryption password.
-while True:
-    password = input('\nEnter an encryption password: ')
-    confirm_pass = input('\nPlease confirm the password: ')
+    # Stores folder and password from command line arguments
+    if len(sys.argv) >= 3:
+        pdf_folder = Path(sys.argv[1]).resolve()
+        password = " ".join(sys.argv[2:])
     
-    if confirm_pass == password:
-        break
-    
+    # Explains command line usage to user.
     else:
-        print("\nERROR - PASSWORDS DO NOT MATCH!")
+        print("\npdf_encrypter.py command line arguments:")
+        print("ARG 1: File path to crawl for PDF's to encrypt")
+        print("ARG 2: Password to encrypt PDF's with (INCLUDES SPACES)")
+        quit()
+
+# User prompt for folder path.
+else:
+    pdf_folder = Path(input("File path to crawl for PDF's to encrypt:\n")).resolve()
+    
+# Validates that path is a directory.
+if pdf_folder.is_dir():
+    os.chdir(pdf_folder)
+else:
+    print('\nERROR - INVALID DIRECTORY PATH.\n')
+    quit()
+
+# User prompt for encryption password.
+password = input('\nEnter an encryption password: ')
 
 # Crawls through directory
 for folder, subfolders, files in os.walk(pdf_folder):
-    
+
     # Crawls through pdf files
     for pdf in Path(folder).glob('*.pdf'):
         
@@ -44,15 +54,11 @@ for folder, subfolders, files in os.walk(pdf_folder):
             except errors.FileNotDecryptedError:
                 print(f'\nERROR - {pdf} ALREADY ENCRYPTED!')
                 continue
-
-        # Adds _encrypted tag line to filename.
+        
+        # Adds _encrypted tag to filename.
         filename = pdf.stem
-
-        # Replaces tag created by pdf_decrypter.py.
-        if filename.endswith('_decrypted'):
-            filename = filename.replace('_decrypted', '_encrypted')
-        else:
-            filename += '_encrypted'
+        if filename.endswith('_decrypted'): filename = filename.replace('_decrypted', '_encrypted')
+        else: filename += '_encrypted'
 
         # Replaces original file with encrypted copy.
         with open(Path(f'./{filename}.pdf'), 'wb') as fhandle:
