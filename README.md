@@ -1,9 +1,14 @@
-pdf_encrypter.py crawls through a directory and encrypts all PDF files with a supplied password.
+# Python Module Prerequisites
 
-pdf_decrypter.py is similar, except it decrypts.
+PyPDF module: https://pypi.org/project/pypdf/
 
-Supports command line functionality however I do not know how to get past PATH length limits, so I have a note on how to get that set up and where to put files to avoid those errors.
+For a guide on installing pip modules see below:
+https://docs.python.org/3/installing/index.html
 
-There are no PATH length issues when using it normally.
+# Usage
 
-It will save PDF files with a tag such as _encrypted or _decrypted depending on which script was used.
+Both scripts will prompt you for a folder which should include PDF files. They will then prompt you for a password.
+
+**"pdf_encrypter.py"** will encrypt those PDF files with that password, if they are not already encrypted.
+
+**"pdf_encrypter.py"** will attempt to decrypt those PDF files with that password, if they are not already decrypted. If decryption fails it will display an error message.
